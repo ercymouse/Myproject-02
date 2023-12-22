@@ -86,7 +86,8 @@
 
     function createPost() {
       const postText = document.getElementById('postText').value;
-      const postImage = document.getElementById('postImage').files[0];
+      const postImageInput = document.getElementById('postImage');
+      const postImage = postImageInput.files.length > 0 ? URL.createObjectURL(postImageInput.files[0]) : null;
 
       if (postText.trim() === '' && !postImage) {
         alert('Please enter text or attach an image.');
@@ -106,13 +107,7 @@
 
       if (postImage) {
         const imageElement = document.createElement('img');
-        const reader = new FileReader();
-
-        reader.onload = function (e) {
-          imageElement.src = e.target.result;
-        };
-
-        reader.readAsDataURL(postImage);
+        imageElement.src = postImage;
         postItem.appendChild(imageElement);
       }
 
@@ -139,7 +134,7 @@
       // Save the post
       const post = {
         text: postText,
-        image: postImage ? URL.createObjectURL(postImage) : null,
+        image: postImage,
         comments: [],
       };
 
